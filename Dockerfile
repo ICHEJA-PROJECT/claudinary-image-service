@@ -8,30 +8,27 @@
 # docker build -f Dockerfile -t quarkus/claudinary-image-service-maven .
 #
 # Ejecuta el contenedor con:
-# docker run -i --rm -p 8088:8088 quarkus/claudinary-image-service-maven
+# docker run -i --rm -p 8080:8080 quarkus/claudinary-image-service-maven
 #
 ####
 
+# Etapa 1: Build - Construir la aplicación con Maven
+FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
+WORKDIR /app
+COPY . .
+RUN mvn clean package -Dquarkus.package.type=fast-jar -DskipTests
+
+# Etapa 2: Final - Crear la imagen de producción
 FROM amazoncorretto:21-alpine-jdk
-
-# Preparar directorios y permisos
 WORKDIR /deployments
-USER root
-RUN chown 1001 /deployments \
-    && chmod "g+rwX" /deployments \
-    && chown 1001:root /deployments
+
+# Copiar solo los artefactos necesarios desde la etapa de build
+COPY --from=build /app/target/quarkus-app/lib/ /deployments/lib/
+COPY --from=build /app/target/quarkus-app/*.jar /deployments/
+COPY --from=build /app/target/quarkus-app/app/ /deployments/app/
+COPY --from=build /app/target/quarkus-app/quarkus/ /deployments/quarkus/
+
 USER 1001
+EXPOSE 8080
 
-# Copiar los artefactos generados por Maven
-# Estructura de directorios de Maven: target/quarkus-app/
-COPY --chown=1001:root target/quarkus-app/lib/ /deployments/lib/
-COPY --chown=1001:root target/quarkus-app/*.jar /deployments/
-COPY --chown=1001:root target/quarkus-app/app/ /deployments/app/
-COPY --chown=1001:root target/quarkus-app/quarkus/ /deployments/quarkus/
-
-EXPOSE 8088
-
-# Configurar variables de entorno para Quarkus
-ENV JAVA_OPTS_APPEND="-Dquarkus.http.host=0.0.0.0 -Dquarkus.http.port=8088"
-
-ENTRYPOINT [ "java", "-jar", "/deployments/quarkus-run.jar" ]
+ENTRYPOINT ["java", "-jar", "/deployments/quarkus-run.jar"]

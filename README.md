@@ -91,5 +91,5 @@ docker build -f Dockerfile -t quarkus/claudinary-image-service-maven .
 ```
 ## CORRER EL DOCKER FILE
 ```shell script
-docker run -i --rm -p 8088:8088 quarkus/claudinary-image-service-maven
+docker run -i --rm -p 8080:8080 quarkus/claudinary-image-service-maven
 ```
