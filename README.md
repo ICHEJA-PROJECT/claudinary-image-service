@@ -64,3 +64,32 @@ If you want to learn more about building native executables, please consult <htt
 Easily start your REST Web Services
 
 [Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+
+## RESPONSE EXAMPLE 
+```shell script
+{
+    "success": true,
+    "message": "Archivo subido exitosamente",
+    "data": {
+        "publicId": "ICHEJA/ICHEJA/file",
+        "url": "http://res.cloudinary.com/dsiamqhuu/image/upload/v1750430136/ICHEJA/ICHEJA/file.jpg",
+        "secureUrl": "https://res.cloudinary.com/dsiamqhuu/image/upload/v1750430136/ICHEJA/ICHEJA/file.jpg",
+        "format": "jpg",
+        "bytes": 4245,
+        "width": 104,
+        "height": 91,
+        "resourceType": "image",
+        "createdAt": "2025-06-20T14:35:36Z"
+    },
+    "errorCode": null
+}
+```
+
+## CONSTRUIR EL DOCKER FILE 
+```shell script
+docker build -f Dockerfile -t quarkus/claudinary-image-service-maven .
+```
+## CORRER EL DOCKER FILE
+```shell script
+docker run -i --rm -p 8088:8088 quarkus/claudinary-image-service-maven
+```

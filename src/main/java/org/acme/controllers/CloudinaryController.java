@@ -47,6 +47,7 @@ public class CloudinaryController {
     @POST
     @Path("/upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Subir archivo", description = "Sube un archivo a Cloudinary")
     @APIResponses({
             @APIResponse(responseCode = "200", description = "Archivo subido exitosamente",
@@ -109,6 +110,7 @@ public class CloudinaryController {
 
     @DELETE
     @Path("/{publicId}")
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Eliminar archivo", description = "Elimina un archivo de Cloudinary")
     public Response deleteFile(
             @PathParam("publicId") @Parameter(description = "ID público del archivo") String publicId) {
